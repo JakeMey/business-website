@@ -1,0 +1,66 @@
+# 🔴 NEVER COMMIT: Database credentials
+config.php
+db_config.php
+database.php
+settings.php
+
+# 🔴 Environment files
+.env
+.env.local
+.env.*.local
+
+# 🗄️ OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+._*
+
+# 📝 Logs
+error_log
+*.log
+*.tmp
+*.temp
+
+# 👨‍💻 IDE files
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+
+# 🗄️ Database dumps (structure is fine, but data isn't)
+*.sql
+*.sql.gz
+*.sql.zip
+*.db
+*.sqlite
+
+# 🔐 Backup files
+*.bak
+*.backup
+*~
+
+# 📦 Composer (if using)
+vendor/
+composer.lock
+
+# 🗄️ XAMPP specific
+xampp_*.log
+
+# 🔐 SSL certificates
+*.pem
+*.crt
+*.key
+*.p12
+*.pfx
+
+# 📦 Archives
+*.zip
+*.rar
+*.tar.gz
+*.7z
+
+# 🚀 Deployment
+.elasticbeanstalk/
+.aws/
+.ftpconfig
