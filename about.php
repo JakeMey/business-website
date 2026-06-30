@@ -20,20 +20,22 @@ $activePage = "about";
         <h1 class="mb-4">About Our Business</h1>
         <div class="row">
             <div class="col-lg-8">
-                <h3>Who We Are</h3>
-                <p>Founded in 2020, <?php echo SITE_NAME; ?> has been at the forefront of providing innovative business solutions. Our mission is to help businesses grow through strategic guidance and cutting-edge technology.</p>
-                
-                <h4 class="mt-4">Our Mission</h4>
-                <p>To empower businesses with the tools and strategies they need to succeed in today's competitive landscape.</p>
-                
-                <h4 class="mt-4">Our Values</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle text-primary"></i> Integrity and transparency</li>
-                    <li><i class="fas fa-check-circle text-primary"></i> Excellence in everything we do</li>
-                    <li><i class="fas fa-check-circle text-primary"></i> Customer-first approach</li>
-                    <li><i class="fas fa-check-circle text-primary"></i> Continuous innovation</li>
-                </ul>
+            <h3>Who We Are</h3>
+            <p>Founded in 2020, <?php echo SITE_NAME; ?> has been at the forefront of providing innovative business solutions. Our mission is to help businesses grow through strategic guidance and cutting-edge technology.</p>
+            
+            <h4 class="mt-4">Our Mission</h4>
+            <p>To empower businesses with the tools and strategies they need to succeed in today's competitive landscape.</p>
+            
+            <h4 class="mt-4">Our Values</h4>
+            
+            <!-- Values without bullet points -->
+            <div class="values-list">
+                <div><i class="fas fa-check-circle text-primary me-2"></i> Integrity and transparency</div>
+                <div><i class="fas fa-check-circle text-primary me-2"></i> Excellence in everything we do</div>
+                <div><i class="fas fa-check-circle text-primary me-2"></i> Customer-first approach</div>
+                <div><i class="fas fa-check-circle text-primary me-2"></i> Continuous innovation</div>
             </div>
+        </div>
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
