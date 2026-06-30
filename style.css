@@ -969,3 +969,76 @@ td .d-flex.align-items-center {
 .alert {
     border-radius: 0.5rem;
 }
+
+/* ============================================
+   EMAIL LINK STYLES
+   ============================================ */
+
+/* Email link styling */
+td a[href^="mailto:"] {
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+td a[href^="mailto:"]:hover {
+    color: var(--bs-primary);
+}
+
+td a[href^="mailto:"] .fa-envelope {
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+td a[href^="mailto:"]:hover .fa-envelope {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+td a[href^="mailto:"] .fa-reply {
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+td a[href^="mailto:"]:hover .fa-reply {
+    opacity: 1;
+    transform: scale(1.1) rotate(-10deg);
+}
+
+td a[href^="mailto:"] .fa-paper-plane {
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+td a[href^="mailto:"]:hover .fa-paper-plane {
+    opacity: 1;
+    transform: translateX(2px) translateY(-2px);
+}
+
+/* Email link with combined icons (envelope + arrow) */
+.email-link-combined {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.email-link-combined .fa-envelope {
+    font-size: 1rem;
+}
+
+.email-link-combined .fa-arrow-right,
+.email-link-combined .fa-reply {
+    font-size: 0.6rem;
+    margin-left: -0.5rem;
+    margin-top: -0.5rem;
+    opacity: 0.7;
+}
+
+.email-link-combined:hover .fa-arrow-right,
+.email-link-combined:hover .fa-reply {
+    opacity: 1;
+    transform: translateX(2px);
+}
