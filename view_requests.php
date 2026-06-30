@@ -49,6 +49,26 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// Handle status update
+if (isset($_GET['update']) && isset($_GET['status'])) {
+    $id = intval($_GET['update']);
+    $status = mysqli_real_escape_string($conn, $_GET['status']);
+    
+    $valid_statuses = ['new', 'in_progress', 'completed'];
+    if (in_array($status, $valid_statuses)) {
+        $sql = "UPDATE customer_requests SET status = '$status' WHERE id = $id";
+        if (mysqli_query($conn, $sql)) {
+            $_SESSION['message'] = "Status updated successfully!";
+            $_SESSION['message_type'] = "success";
+        }
+    }
+    
+    // Redirect back to preserve filter and sort
+    $redirect_url = 'view_requests.php?filter=' . $_GET['filter'] . '&sort=' . $_GET['sort'] . '&dir=' . $_GET['dir'];
+    header('Location: ' . $redirect_url);
+    exit;
+}
+
 // Handle status filter
 $status_filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $where_clause = '';
@@ -144,6 +164,19 @@ else:
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container py-5">
+        <!-- Alert Messages -->
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-<?php echo $_SESSION['message_type']; ?> alert-dismissible fade show" role="alert">
+                <i class="fas fa-<?php echo $_SESSION['message_type'] == 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i>
+                <?php 
+                echo $_SESSION['message'];
+                unset($_SESSION['message']);
+                unset($_SESSION['message_type']);
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-dashboard text-primary"></i> Customer Requests Dashboard</h1>
             <div>
@@ -200,7 +233,7 @@ else:
             <?php endif; ?>
         </div>
 
-        <!-- Table with Sortable Columns -->
+        <!-- Table with Sortable Columns & Status Dropdown -->
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white">
                 <h5 class="mb-0"><i class="fas fa-list"></i> Contact Form Requests</h5>
@@ -261,16 +294,7 @@ else:
                                     </a>
                                 </th>
                                 <th>Request</th>
-                                <th>
-                                    <a href="?filter=<?php echo $status_filter; ?>&sort=status&dir=<?php echo ($sort_column == 'status') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'status') ? 'active' : ''; ?>">
-                                        Status
-                                        <?php if ($sort_column == 'status'): ?>
-                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
-                                        <?php else: ?>
-                                            <i class="fas fa-sort text-muted"></i>
-                                        <?php endif; ?>
-                                    </a>
-                                </th>
+                                <th>Status</th>
                                 <th>
                                     <a href="?filter=<?php echo $status_filter; ?>&sort=created_at&dir=<?php echo ($sort_column == 'created_at') ? $next_dir : 'DESC'; ?>" class="sort-link <?php echo ($sort_column == 'created_at') ? 'active' : ''; ?>">
                                         Submitted
@@ -328,10 +352,41 @@ else:
                                                 <i class="fas fa-chevron-down expand-icon"></i>
                                             </button>
                                         </td>
+                                        <!-- Status Column with Dropdown -->
                                         <td>
-                                            <span class="badge <?php echo $status_badge[$row['status']]; ?>">
-                                                <?php echo $status_label[$row['status']]; ?>
-                                            </span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge <?php echo $status_badge[$row['status']]; ?>">
+                                                    <?php echo $status_label[$row['status']]; ?>
+                                                </span>
+                                                <div class="dropdown d-inline-block">
+                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                            type="button" 
+                                                            data-bs-toggle="dropdown"
+                                                            title="Change status">
+                                                        <i class="fas fa-chevron-down"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li>
+                                                            <a class="dropdown-item <?php echo $row['status'] == 'new' ? 'active' : ''; ?>" 
+                                                               href="?update=<?php echo $row['id']; ?>&status=new&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                                <i class="fas fa-clock text-warning"></i> New
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item <?php echo $row['status'] == 'in_progress' ? 'active' : ''; ?>" 
+                                                               href="?update=<?php echo $row['id']; ?>&status=in_progress&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                                <i class="fas fa-spinner text-info"></i> In Progress
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item <?php echo $row['status'] == 'completed' ? 'active' : ''; ?>" 
+                                                               href="?update=<?php echo $row['id']; ?>&status=completed&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                                <i class="fas fa-check-circle text-success"></i> Completed
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td class="text-nowrap">
                                             <?php echo date('d/m/Y', strtotime($row['created_at'])); ?>
