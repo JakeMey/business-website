@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-4">
                 <h5><?php echo SITE_NAME; ?></h5>
-                <p>Providing exceptional business solutions since 2020.</p>
+                <p>Providing exceptional business solutions since 2026.</p>
             </div>
             <div class="col-md-4">
                 <h5>Quick Links</h5>

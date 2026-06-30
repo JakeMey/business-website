@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS customer_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    phone VARCHAR(20),
+    phone VARCHAR(30),
     service VARCHAR(100),
-    request TEXT NOT NULL,
+    request VARCHAR(1000),
     status ENUM('new', 'in_progress', 'completed') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

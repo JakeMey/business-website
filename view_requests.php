@@ -1,6 +1,7 @@
 <?php
 include 'config.php';
 $pageTitle = "View Requests";
+$activePage = "view_requests";
 
 // Debug mode - show errors
 error_reporting(E_ALL);
@@ -14,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
     
-    // Debug: Log login attempt
     error_log("Login attempt: username=$username");
     
     $sql = "SELECT * FROM admin_users WHERE username = '$username'";
@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         $user = mysqli_fetch_assoc($result);
         
         if ($user) {
-            // Debug: Check if password matches
             if (password_verify($password, $user['password_hash'])) {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_username'] = $username;
@@ -59,123 +58,121 @@ if (!$logged_in):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
+<body>
+    <?php include 'includes/navbar.php'; ?>
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Admin Login</h1>
         <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Admin Login</h4>
-                    </div>
-                    <div class="card-body">
+            <div class="col-md-5">
+                <div class="card shadow border-0">
+                    <div class="card-body p-4">
                         <?php if (isset($login_error)): ?>
                             <div class="alert alert-danger"><?php echo htmlspecialchars($login_error); ?></div>
                         <?php endif; ?>
                         <form method="POST">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
+                                <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label"><i class="fas fa-key"></i> Password</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                            <button type="submit" name="login" class="btn btn-primary w-100">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
                         </form>
-                        <p class="text-muted mt-3 small">Try: admin / admin123</p>
+                        <p class="text-muted mt-3 small text-center">Try: admin / admin123</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <?php include 'includes/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php else: ?>
+<?php
+else:
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Requests Dashboard</title>
+    <title><?php echo SITE_NAME; ?> - <?php echo $pageTitle; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-dark bg-dark mb-4">
-            <div class="container">
-                <span class="navbar-brand">
-                    <i class="fas fa-dashboard"></i> Customer Requests Dashboard
+    <?php include 'includes/navbar.php'; ?>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-dashboard text-primary"></i> Customer Requests Dashboard</h1>
+            <div>
+                <span class="text-muted me-3">
+                    <i class="fas fa-user-circle"></i> <?php echo $_SESSION['admin_username']; ?>
                 </span>
-                <div>
-                    <span class="text-white me-3">Welcome, <?php echo $_SESSION['admin_username']; ?></span>
-                    <a href="?logout=1" class="btn btn-danger btn-sm">Logout</a>
-                </div>
+                <a href="?logout=1" class="btn btn-danger btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
-        </nav>
+        </div>
 
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <?php
+            $stats = [
+                ['Total Requests', 'fa-inbox', 'primary', "SELECT COUNT(*) as total FROM customer_requests"],
+                ['New', 'fa-clock', 'warning', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'new'"],
+                ['In Progress', 'fa-spinner', 'info', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'in_progress'"],
+                ['Completed', 'fa-check-circle', 'success', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'completed'"]
+            ];
+            
+            foreach ($stats as $stat) {
+                $result = mysqli_query($conn, $stat[3]);
+                $row = mysqli_fetch_assoc($result);
+                echo '
+                <div class="col-md-3 mb-3">
+                    <div class="card text-white bg-' . $stat[2] . ' shadow-sm h-100">
                         <div class="card-body">
-                            <h5>Total Requests</h5>
-                            <?php
-                            $result = mysqli_query($conn, "SELECT COUNT(*) as total FROM customer_requests");
-                            $row = mysqli_fetch_assoc($result);
-                            ?>
-                            <h2><?php echo $row['total']; ?></h2>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">' . $stat[0] . '</h6>
+                                    <h2 class="mb-0">' . $row['total'] . '</h2>
+                                </div>
+                                <i class="fas ' . $stat[1] . ' fa-2x opacity-50"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning text-dark">
-                        <div class="card-body">
-                            <h5>New</h5>
-                            <?php
-                            $result = mysqli_query($conn, "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'new'");
-                            $row = mysqli_fetch_assoc($result);
-                            ?>
-                            <h2><?php echo $row['total']; ?></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <h5>In Progress</h5>
-                            <?php
-                            $result = mysqli_query($conn, "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'in_progress'");
-                            $row = mysqli_fetch_assoc($result);
-                            ?>
-                            <h2><?php echo $row['total']; ?></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <h5>Completed</h5>
-                            <?php
-                            $result = mysqli_query($conn, "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'completed'");
-                            $row = mysqli_fetch_assoc($result);
-                            ?>
-                            <h2><?php echo $row['total']; ?></h2>
-                        </div>
-                    </div>
-                </div>
+                </div>';
+            }
+            ?>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-list"></i> All Requests</h5>
             </div>
-
-            <div class="card shadow">
-                <div class="card-body">
-                    <table class="table table-striped table-hover">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-align-middle">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Service</th>
+                                <th>Request</th>
                                 <th>Status</th>
                                 <th>Submitted</th>
                             </tr>
@@ -192,17 +189,63 @@ if (!$logged_in):
                                         'in_progress' => 'bg-info',
                                         'completed' => 'bg-success'
                                     ];
-                                    echo '<tr>';
-                                    echo '<td>' . $row['id'] . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['name']) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['email']) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row['service']) . '</td>';
-                                    echo '<td><span class="badge ' . $status_badge[$row['status']] . '">' . $row['status'] . '</span></td>';
-                                    echo '<td>' . date('d/m/Y h:i A', strtotime($row['created_at'])) . '</td>';
-                                    echo '</tr>';
+                                    $status_label = [
+                                        'new' => 'New',
+                                        'in_progress' => 'In Progress',
+                                        'completed' => 'Completed'
+                                    ];
+                                    
+                                    // Truncate request for preview
+                                    $request_preview = htmlspecialchars($row['request']);
+                                    if (strlen($request_preview) > 60) {
+                                        $request_preview = substr($request_preview, 0, 60) . '...';
+                                    }
+                                    
+                                    // Format phone number or show N/A
+                                    $phone_display = !empty($row['phone']) ? htmlspecialchars($row['phone']) : '—';
+                                    ?>
+                                    <tr>
+                                        <td><strong><?php echo $row['id']; ?></strong></td>
+                                        <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                        <td><?php echo $phone_display; ?></td>
+                                        <td><?php echo htmlspecialchars($row['service']); ?></td>
+                                        <td>
+                                            <span class="request-preview">
+                                                <?php echo $request_preview; ?>
+                                            </span>
+                                            <button class="btn btn-link btn-sm p-0 ms-1 btn-view" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#request<?php echo $row['id']; ?>"
+                                                    onclick="this.querySelector('.expand-icon').classList.toggle('rotated')">
+                                                <i class="fas fa-chevron-down expand-icon"></i>
+                                            </button>
+                                        </td>
+                                        <td><span class="badge <?php echo $status_badge[$row['status']]; ?>"><?php echo $status_label[$row['status']]; ?></span></td>
+                                        <td class="text-nowrap">
+                                            <?php echo date('d/m/Y', strtotime($row['created_at'])); ?>
+                                            <br>
+                                            <small class="text-muted"><?php echo date('h:i A', strtotime($row['created_at'])); ?></small>
+                                        </td>
+                                    </tr>
+                                    <!-- Expandable row with "Full Request" header -->
+                                    <tr class="collapse request-detail-row" id="request<?php echo $row['id']; ?>">
+                                        <td colspan="8" class="p-0">
+                                            <div class="request-expanded">
+                                                <div class="request-header">
+                                                    <i class="fas fa-envelope text-primary"></i> Full Request:
+                                                </div>
+                                                <div class="request-body">
+                                                    <?php echo nl2br(htmlspecialchars($row['request'])); ?>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php
                                 }
                             } else {
-                                echo '<tr><td colspan="6" class="text-center">No requests yet.</td></tr>';
+                                echo '<tr><td colspan="8" class="text-center text-muted py-3">No requests yet.</td></tr>';
                             }
                             ?>
                         </tbody>
@@ -211,6 +254,12 @@ if (!$logged_in):
             </div>
         </div>
     </div>
+
+    <?php include 'includes/footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php endif; ?>
+<?php
+endif;
+?>

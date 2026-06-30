@@ -21,7 +21,7 @@ $activePage = "about";
         <div class="row">
             <div class="col-lg-8">
             <h3>Who We Are</h3>
-            <p>Founded in 2020, <?php echo SITE_NAME; ?> has been at the forefront of providing innovative business solutions. Our mission is to help businesses grow through strategic guidance and cutting-edge technology.</p>
+            <p>Founded in 2026, <?php echo SITE_NAME; ?> has been at the forefront of providing innovative business solutions. Our mission is to help businesses grow through strategic guidance and cutting-edge technology.</p>
             
             <h4 class="mt-4">Our Mission</h4>
             <p>To empower businesses with the tools and strategies they need to succeed in today's competitive landscape.</p>
