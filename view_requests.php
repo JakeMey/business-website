@@ -49,21 +49,6 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-// Handle delete
-if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
-    $sql = "DELETE FROM customer_requests WHERE id = $id";
-    if (mysqli_query($conn, $sql)) {
-        $_SESSION['message'] = "Request deleted successfully!";
-        $_SESSION['message_type'] = "danger";
-    }
-    
-    // Redirect back to preserve filter and sort
-    $redirect_url = 'view_requests.php?filter=' . $_GET['filter'] . '&sort=' . $_GET['sort'] . '&dir=' . $_GET['dir'];
-    header('Location: ' . $redirect_url);
-    exit;
-}
-
 // Handle status update
 if (isset($_GET['update']) && isset($_GET['status'])) {
     $id = intval($_GET['update']);
@@ -352,12 +337,12 @@ else:
                                     // Email subject and body
                                     $email_subject = 'Re: ' . htmlspecialchars($row['service']) . ' Request';
                                     $email_body = "Dear " . htmlspecialchars($row['name']) . ",\r\n\r\n"
-                                    . "Thank you for your request regarding " . htmlspecialchars($row['service']) . ".\r\n\r\n"
-                                    . "I will get back to you shortly.\r\n\r\n"
-                                    . "Best regards,\r\n"
-                                    . "The Team";
+                                                . "Thank you for your request regarding " . htmlspecialchars($row['service']) . ".\r\n\r\n"
+                                                . "I will get back to you shortly.\r\n\r\n"
+                                                . "Best regards,\r\n"
+                                                . "The Team";
                                     
-                                    // Encode for mailto link (rawurlencode preserves spaces as %20)
+                                    // Encode for mailto link
                                     $email_subject_encoded = rawurlencode($email_subject);
                                     $email_body_encoded = rawurlencode($email_body);
                                     ?>
@@ -386,7 +371,7 @@ else:
                                                 <i class="fas fa-chevron-down expand-icon"></i>
                                             </button>
                                         </td>
-                                        <!-- Status Column - Badge Left, Dropdown Right -->
+                                        <!-- Status Column - Badge Left, Dropdown Right (No Delete) -->
                                         <td>
                                             <div class="d-flex align-items-center justify-content-between gap-2">
                                                 <span class="badge <?php echo $status_badge[$row['status']]; ?>">
@@ -416,14 +401,6 @@ else:
                                                             <a class="dropdown-item <?php echo $row['status'] == 'completed' ? 'active' : ''; ?>" 
                                                                href="?update=<?php echo $row['id']; ?>&status=completed&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
                                                                 <i class="fas fa-check-circle text-success"></i> Completed
-                                                            </a>
-                                                        </li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li>
-                                                            <a class="dropdown-item text-danger" 
-                                                               href="?delete=<?php echo $row['id']; ?>&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>" 
-                                                               onclick="return confirm('Are you sure you want to delete this request from <?php echo htmlspecialchars($row['name']); ?>? This cannot be undone.')">
-                                                                <i class="fas fa-trash"></i> Delete
                                                             </a>
                                                         </li>
                                                     </ul>

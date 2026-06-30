@@ -929,7 +929,10 @@ footer .text-center p {
     opacity: 1;
 }
 
-/* Footer credit styling */
+/* ============================================
+   FOOTER CREDIT
+   ============================================ */
+
 .footer-credit {
     font-size: 0.85rem;
     opacity: 0.7;
