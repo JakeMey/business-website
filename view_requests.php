@@ -336,15 +336,16 @@ else:
                                     
                                     // Email subject and body
                                     $email_subject = 'Re: ' . htmlspecialchars($row['service']) . ' Request';
-                                    $email_body = "Dear " . htmlspecialchars($row['name']) . ",\r\n\r\n"
-                                                . "Thank you for your request regarding " . htmlspecialchars($row['service']) . ".\r\n\r\n"
-                                                . "I will get back to you shortly.\r\n\r\n"
-                                                . "Best regards,\r\n"
+
+                                    // Use %0D%0A for Windows-style line breaks (most compatible)
+                                    $email_body = "Dear " . htmlspecialchars($row['name']) . ",%0D%0A%0D%0A"
+                                                . "Thank you for your request regarding " . htmlspecialchars($row['service']) . ".%0D%0A%0D%0A"
+                                                . "We will get back to you shortly.%0D%0A%0D%0A"
+                                                . "Best regards,%0D%0A"
                                                 . "The Team";
-                                    
-                                    // Encode for mailto link
+
                                     $email_subject_encoded = rawurlencode($email_subject);
-                                    $email_body_encoded = rawurlencode($email_body);
+                                    $email_body_encoded = $email_body; // Already has %0D%0A
                                     ?>
                                     <tr>
                                         <td><strong><?php echo $row['id']; ?></strong></td>
