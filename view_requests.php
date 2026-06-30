@@ -352,9 +352,9 @@ else:
                                                 <i class="fas fa-chevron-down expand-icon"></i>
                                             </button>
                                         </td>
-                                        <!-- Status Column with Dropdown -->
+                                        <!-- Status Column - Badge Left, Dropdown Right -->
                                         <td>
-                                            <div class="d-flex align-items-center gap-2">
+                                            <div class="d-flex align-items-center justify-content-between gap-2">
                                                 <span class="badge <?php echo $status_badge[$row['status']]; ?>">
                                                     <?php echo $status_label[$row['status']]; ?>
                                                 </span>
@@ -368,19 +368,19 @@ else:
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li>
                                                             <a class="dropdown-item <?php echo $row['status'] == 'new' ? 'active' : ''; ?>" 
-                                                               href="?update=<?php echo $row['id']; ?>&status=new&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                            href="?update=<?php echo $row['id']; ?>&status=new&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
                                                                 <i class="fas fa-clock text-warning"></i> New
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item <?php echo $row['status'] == 'in_progress' ? 'active' : ''; ?>" 
-                                                               href="?update=<?php echo $row['id']; ?>&status=in_progress&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                            href="?update=<?php echo $row['id']; ?>&status=in_progress&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
                                                                 <i class="fas fa-spinner text-info"></i> In Progress
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item <?php echo $row['status'] == 'completed' ? 'active' : ''; ?>" 
-                                                               href="?update=<?php echo $row['id']; ?>&status=completed&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
+                                                            href="?update=<?php echo $row['id']; ?>&status=completed&filter=<?php echo $status_filter; ?>&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>">
                                                                 <i class="fas fa-check-circle text-success"></i> Completed
                                                             </a>
                                                         </li>
