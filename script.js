@@ -80,3 +80,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// ============================================
+// STAT CARD FILTER CLICK HANDLER
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Make stat cards clickable for filtering
+    const cards = document.querySelectorAll('.stat-clickable');
+    cards.forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function () {
+            const filter = this.dataset.filter;
+            window.location.href = '?filter=' + filter;
+        });
+    });
+});

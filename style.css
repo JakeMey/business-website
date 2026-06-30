@@ -705,3 +705,35 @@ footer .text-center p {
 .badge.bg-success {
     color: #fff;
 }
+
+/* ============================================
+   FILTER INDICATOR BADGE COLORS
+   ============================================ */
+
+/* Default - All Requests */
+.filter-badge-all {
+    background-color: #0d6efd !important;
+    /* Secondary gray */
+    color: #fff !important;
+}
+
+/* New status */
+.filter-badge-new {
+    background-color: #ffc107 !important;
+    /* Warning yellow */
+    color: #fff !important;
+}
+
+/* In Progress status */
+.filter-badge-in_progress {
+    background-color: #0dcaf0 !important;
+    /* Info blue */
+    color: #fff !important;
+}
+
+/* Completed status */
+.filter-badge-completed {
+    background-color: #198754 !important;
+    /* Success green */
+    color: #fff !important;
+}

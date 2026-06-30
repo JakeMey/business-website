@@ -49,6 +49,13 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// Handle status filter
+$status_filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+$where_clause = '';
+if ($status_filter != 'all') {
+    $where_clause = "WHERE status = '" . mysqli_real_escape_string($conn, $status_filter) . "'";
+}
+
 if (!$logged_in):
 ?>
 <!DOCTYPE html>
@@ -86,7 +93,7 @@ if (!$logged_in):
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </form>
-                        <p class="text-muted mt-3 small text-center">Try: admin / admin123</p>
+                        <p class="text-muted mt-3 small text-center">Try: admin / password</p>
                     </div>
                 </div>
             </div>
@@ -95,6 +102,7 @@ if (!$logged_in):
 
     <?php include 'includes/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
 <?php
@@ -126,14 +134,14 @@ else:
             </div>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- Stats Cards - Clickable via JavaScript (NO visual changes) -->
         <div class="row mb-4">
             <?php
             $stats = [
-                ['Total Requests', 'fa-inbox', 'primary', "SELECT COUNT(*) as total FROM customer_requests"],
-                ['New', 'fa-clock', 'warning', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'new'"],
-                ['In Progress', 'fa-spinner', 'info', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'in_progress'"],
-                ['Completed', 'fa-check-circle', 'success', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'completed'"]
+                ['Total Requests', 'fa-inbox', 'primary', "SELECT COUNT(*) as total FROM customer_requests", 'all'],
+                ['New', 'fa-clock', 'warning', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'new'", 'new'],
+                ['In Progress', 'fa-spinner', 'info', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'in_progress'", 'in_progress'],
+                ['Completed', 'fa-check-circle', 'success', "SELECT COUNT(*) as total FROM customer_requests WHERE status = 'completed'", 'completed']
             ];
             
             foreach ($stats as $stat) {
@@ -141,7 +149,7 @@ else:
                 $row = mysqli_fetch_assoc($result);
                 echo '
                 <div class="col-md-3 mb-3">
-                    <div class="card text-white bg-' . $stat[2] . ' shadow-sm h-100">
+                    <div class="card text-white bg-' . $stat[2] . ' shadow-sm h-100 stat-clickable" data-filter="' . $stat[4] . '">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -155,6 +163,18 @@ else:
                 </div>';
             }
             ?>
+        </div>
+
+        <!-- Active Filter Indicator -->
+        <div class="mb-3">
+            <?php if ($status_filter == 'all'): ?>
+            <span class="badge filter-badge-all">Showing: All Requests</span>
+            <?php else: ?>
+            <span class="badge filter-badge-<?php echo $status_filter; ?>">Showing: <?php echo ucfirst(str_replace('_', ' ', $status_filter)); ?></span>
+            <a href="?filter=all" class="btn btn-sm btn-outline-secondary ms-2">
+            <i class="fas fa-times"></i> Clear Filter
+            </a>
+            <?php endif; ?>
         </div>
 
         <!-- Table -->
@@ -179,7 +199,13 @@ else:
                         </thead>
                         <tbody>
                             <?php
-                            $sql = "SELECT * FROM customer_requests ORDER BY created_at DESC";
+                            $sql = "SELECT * FROM customer_requests $where_clause ORDER BY 
+                                    CASE status 
+                                        WHEN 'new' THEN 1 
+                                        WHEN 'in_progress' THEN 2 
+                                        WHEN 'completed' THEN 3 
+                                    END, 
+                                    created_at DESC";
                             $result = mysqli_query($conn, $sql);
                             
                             if (mysqli_num_rows($result) > 0) {
@@ -245,7 +271,7 @@ else:
                                     <?php
                                 }
                             } else {
-                                echo '<tr><td colspan="8" class="text-center text-muted py-3">No requests yet.</td></tr>';
+                                echo '<tr><td colspan="8" class="text-center text-muted py-3">No requests found.</td></tr>';
                             }
                             ?>
                         </tbody>
@@ -258,6 +284,7 @@ else:
     <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
 <?php
