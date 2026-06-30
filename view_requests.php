@@ -93,7 +93,7 @@ if (!$logged_in):
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </form>
-                        <p class="text-muted mt-3 small text-center">Try: admin / password</p>
+                        <p class="text-muted mt-3 small text-center">Try: admin / admin123</p>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@ else:
             </div>
         </div>
 
-        <!-- Stats Cards - Clickable via JavaScript (NO visual changes) -->
+        <!-- Stats Cards - Clickable (NO inline styling) -->
         <div class="row mb-4">
             <?php
             $stats = [
@@ -147,9 +147,10 @@ else:
             foreach ($stats as $stat) {
                 $result = mysqli_query($conn, $stat[3]);
                 $row = mysqli_fetch_assoc($result);
+                $is_active = ($status_filter == $stat[4]) ? 'active-filter' : '';
                 echo '
                 <div class="col-md-3 mb-3">
-                    <div class="card text-white bg-' . $stat[2] . ' shadow-sm h-100 stat-clickable" data-filter="' . $stat[4] . '">
+                    <div class="card shadow-sm h-100 stat-clickable stat-' . $stat[2] . ' ' . $is_active . '" data-filter="' . $stat[4] . '">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -168,12 +169,12 @@ else:
         <!-- Active Filter Indicator -->
         <div class="mb-3">
             <?php if ($status_filter == 'all'): ?>
-            <span class="badge filter-badge-all">Showing: All Requests</span>
+                <span class="badge filter-badge-all">Showing: All Requests</span>
             <?php else: ?>
-            <span class="badge filter-badge-<?php echo $status_filter; ?>">Showing: <?php echo ucfirst(str_replace('_', ' ', $status_filter)); ?></span>
-            <a href="?filter=all" class="btn btn-sm btn-outline-secondary ms-2">
-            <i class="fas fa-times"></i> Clear Filter
-            </a>
+                <span class="badge filter-badge-<?php echo $status_filter; ?>">Showing: <?php echo ucfirst(str_replace('_', ' ', $status_filter)); ?></span>
+                <a href="?filter=all" class="btn btn-sm btn-outline-secondary ms-2">
+                    <i class="fas fa-times"></i> Clear Filter
+                </a>
             <?php endif; ?>
         </div>
 
@@ -211,9 +212,9 @@ else:
                             if (mysqli_num_rows($result) > 0) {
                                 while($row = mysqli_fetch_assoc($result)) {
                                     $status_badge = [
-                                        'new' => 'bg-warning',
-                                        'in_progress' => 'bg-info',
-                                        'completed' => 'bg-success'
+                                        'new' => 'badge-warning',
+                                        'in_progress' => 'badge-info',
+                                        'completed' => 'badge-success'
                                     ];
                                     $status_label = [
                                         'new' => 'New',
@@ -248,7 +249,11 @@ else:
                                                 <i class="fas fa-chevron-down expand-icon"></i>
                                             </button>
                                         </td>
-                                        <td><span class="badge <?php echo $status_badge[$row['status']]; ?>"><?php echo $status_label[$row['status']]; ?></span></td>
+                                        <td>
+                                            <span class="badge <?php echo $status_badge[$row['status']]; ?>">
+                                                <?php echo $status_label[$row['status']]; ?>
+                                            </span>
+                                        </td>
                                         <td class="text-nowrap">
                                             <?php echo date('d/m/Y', strtotime($row['created_at'])); ?>
                                             <br>
