@@ -890,3 +890,41 @@ footer .text-center p {
     background-color: var(--bs-secondary) !important;
     color: var(--white) !important;
 }
+
+/* ============================================
+   SORTABLE COLUMN HEADERS
+   ============================================ */
+
+.sort-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.25rem;
+    transition: color 0.2s ease;
+    font-weight: 600;
+}
+
+.sort-link:hover {
+    color: var(--bs-primary);
+}
+
+.sort-link .fa-sort {
+    font-size: 0.7rem;
+    opacity: 0.4;
+}
+
+.sort-link .fa-sort-up,
+.sort-link .fa-sort-down {
+    font-size: 0.7rem;
+    color: var(--bs-primary);
+}
+
+.sort-link.active {
+    color: var(--bs-primary);
+}
+
+.sort-link.active .fa-sort {
+    opacity: 1;
+}

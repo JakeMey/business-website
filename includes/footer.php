@@ -22,7 +22,7 @@
         </div>
         <hr>
         <div class="text-center">
-            <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</p>
+            <p>&copy; <?php echo date('Y'); ?> Jakemey | <?php echo SITE_NAME; ?>. All rights reserved.</p>
         </div>
     </div>
 </footer>

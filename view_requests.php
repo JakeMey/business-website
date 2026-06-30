@@ -56,6 +56,28 @@ if ($status_filter != 'all') {
     $where_clause = "WHERE status = '" . mysqli_real_escape_string($conn, $status_filter) . "'";
 }
 
+// Handle sorting
+$sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'created_at';
+$sort_direction = isset($_GET['dir']) ? $_GET['dir'] : 'DESC';
+
+// Validate sort column to prevent SQL injection
+$allowed_columns = ['id', 'name', 'email', 'phone', 'service', 'status', 'created_at'];
+if (!in_array($sort_column, $allowed_columns)) {
+    $sort_column = 'created_at';
+}
+
+// Validate sort direction
+$sort_direction = strtoupper($sort_direction);
+if ($sort_direction != 'ASC' && $sort_direction != 'DESC') {
+    $sort_direction = 'DESC';
+}
+
+// Build ORDER BY clause
+$order_by = "ORDER BY $sort_column $sort_direction";
+
+// Toggle direction for next click
+$next_dir = ($sort_direction == 'ASC') ? 'DESC' : 'ASC';
+
 if (!$logged_in):
 ?>
 <!DOCTYPE html>
@@ -172,41 +194,98 @@ else:
                 <span class="badge filter-badge-all">Showing: All Requests</span>
             <?php else: ?>
                 <span class="badge filter-badge-<?php echo $status_filter; ?>">Showing: <?php echo ucfirst(str_replace('_', ' ', $status_filter)); ?></span>
-                <a href="?filter=all" class="btn btn-sm btn-outline-secondary ms-2">
+                <a href="?filter=all&sort=<?php echo $sort_column; ?>&dir=<?php echo $sort_direction; ?>" class="btn btn-sm btn-outline-secondary ms-2">
                     <i class="fas fa-times"></i> Clear Filter
                 </a>
             <?php endif; ?>
         </div>
 
-        <!-- Table -->
+        <!-- Table with Sortable Columns -->
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="fas fa-list"></i> All Requests</h5>
+                <h5 class="mb-0"><i class="fas fa-list"></i> Contact Form Requests</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover table-align-middle">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Service</th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=id&dir=<?php echo ($sort_column == 'id') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'id') ? 'active' : ''; ?>">
+                                        ID
+                                        <?php if ($sort_column == 'id'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=name&dir=<?php echo ($sort_column == 'name') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'name') ? 'active' : ''; ?>">
+                                        Name
+                                        <?php if ($sort_column == 'name'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=email&dir=<?php echo ($sort_column == 'email') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'email') ? 'active' : ''; ?>">
+                                        Email
+                                        <?php if ($sort_column == 'email'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=phone&dir=<?php echo ($sort_column == 'phone') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'phone') ? 'active' : ''; ?>">
+                                        Phone
+                                        <?php if ($sort_column == 'phone'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=service&dir=<?php echo ($sort_column == 'service') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'service') ? 'active' : ''; ?>">
+                                        Service
+                                        <?php if ($sort_column == 'service'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
                                 <th>Request</th>
-                                <th>Status</th>
-                                <th>Submitted</th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=status&dir=<?php echo ($sort_column == 'status') ? $next_dir : 'ASC'; ?>" class="sort-link <?php echo ($sort_column == 'status') ? 'active' : ''; ?>">
+                                        Status
+                                        <?php if ($sort_column == 'status'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="?filter=<?php echo $status_filter; ?>&sort=created_at&dir=<?php echo ($sort_column == 'created_at') ? $next_dir : 'DESC'; ?>" class="sort-link <?php echo ($sort_column == 'created_at') ? 'active' : ''; ?>">
+                                        Submitted
+                                        <?php if ($sort_column == 'created_at'): ?>
+                                            <i class="fas fa-sort-<?php echo strtolower($sort_direction); ?>"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-sort text-muted"></i>
+                                        <?php endif; ?>
+                                    </a>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $sql = "SELECT * FROM customer_requests $where_clause ORDER BY 
-                                    CASE status 
-                                        WHEN 'new' THEN 1 
-                                        WHEN 'in_progress' THEN 2 
-                                        WHEN 'completed' THEN 3 
-                                    END, 
-                                    created_at DESC";
+                            $sql = "SELECT * FROM customer_requests $where_clause $order_by";
                             $result = mysqli_query($conn, $sql);
                             
                             if (mysqli_num_rows($result) > 0) {
