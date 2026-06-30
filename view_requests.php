@@ -93,7 +93,7 @@ if (!$logged_in):
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </form>
-                        <p class="text-muted mt-3 small text-center">Try: admin / admin123</p>
+                        <p class="text-muted mt-3 small text-center">Try: admin / password</p>
                     </div>
                 </div>
             </div>
