@@ -23,6 +23,11 @@
         <hr>
         <div class="text-center">
             <p>&copy; <?php echo date('Y'); ?> Jakemey | <?php echo SITE_NAME; ?>. All rights reserved.</p>
+            <p class="footer-credit">
+                Built with <a href="https://getbootstrap.com" target="_blank" class="text-decoration-none">Bootstrap 5.3</a> • 
+                <a href="https://www.php.net" target="_blank" class="text-decoration-none">PHP</a> • 
+                <a href="https://www.mysql.com" target="_blank" class="text-decoration-none">MySQL</a>
+            </p>
         </div>
     </div>
 </footer>
