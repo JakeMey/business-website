@@ -721,7 +721,7 @@ footer .text-center p {
 .filter-badge-new {
     background-color: #ffc107 !important;
     /* Warning yellow */
-    color: #fff !important;
+    color: #000 !important;
 }
 
 /* In Progress status */
@@ -736,4 +736,9 @@ footer .text-center p {
     background-color: #198754 !important;
     /* Success green */
     color: #fff !important;
+}
+
+.bg-warning,
+.filter-badge-new {
+    color: #000 !important;
 }
