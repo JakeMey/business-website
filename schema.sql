@@ -23,7 +23,11 @@ CREATE TABLE IF NOT EXISTS admin_users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Sample services
+-- Insert a default admin (password: password - CHANGE THIS!)
+INSERT INTO admin_users (username, password_hash) 
+VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
+-- Sample requests for testing
 INSERT INTO customer_requests (name, email, phone, service, request, status) VALUES
 ('John Doe', 'john@example.com', '555-0101', 'Consulting', 'Need business strategy consultation', 'completed'),
 ('Jane Smith', 'jane@example.com', '555-0102', 'Development', 'Looking for web development services', 'in_progress');
