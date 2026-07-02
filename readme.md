@@ -152,7 +152,7 @@ The database consists of two tables:
 | `email` | VARCHAR(100) | Customer's email address |
 | `phone` | VARCHAR(20) | Customer's phone number |
 | `service` | VARCHAR(100) | Service type requested |
-| `request` | TEXT | Detailed request description |
+| `request` | VARCHAR(1000) | Detailed request description |
 | `status` | ENUM('new','in_progress','completed') | Request status |
 | `created_at` | TIMESTAMP | Submission timestamp |
 | `updated_at` | TIMESTAMP | Last update timestamp |
