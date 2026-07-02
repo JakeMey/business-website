@@ -1,6 +1,6 @@
 # 🏢 Business Website
 
-A fully functional business website with customer request management system built with PHP, MySQL, and Bootstrap 5.
+A fully dynamic business website with customer request management system built with PHP, MySQL, and Bootstrap 5.
 
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS customer_requests (
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
     service VARCHAR(100),
-    request TEXT NOT NULL,
+    request VARCHAR(1000),
     status ENUM('new', 'in_progress', 'completed') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -194,9 +194,15 @@ CREATE TABLE IF NOT EXISTS admin_users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create default admin (password: admin123)
+-- Insert a default admin (password: password - CHANGE THIS!)
 INSERT INTO admin_users (username, password_hash) 
 VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
+-- Sample requests for testing
+INSERT INTO customer_requests (name, email, phone, service, request, status) VALUES
+('John Doe', 'john@example.com', '555-0101', 'Consulting', 'Need business strategy consultation', 'completed'),
+('Jane Smith', 'jane@example.com', '555-0102', 'Development', 'Looking for web development services', 'in_progress');
+
 ```
 
 ---
