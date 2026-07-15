@@ -13,7 +13,7 @@ define('DB_NAME', 'business_db');
 // Site configuration
 define('SITE_NAME', 'Your Business Name');
 define('SITE_EMAIL', 'info@yourbusiness.com');
-define('SITE_PHONE', '(555) 123-4567');
+define('SITE_PHONE', '(03) 0000 0000');
 define('SITE_URL', 'http://localhost/business-website');
 
 // Create database connection
