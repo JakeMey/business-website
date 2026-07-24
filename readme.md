@@ -52,7 +52,7 @@ A fully dynamic business website with customer request management system built w
 
 ### User Experience
 
-- **⚡ Fast Loading** - Optimized for quick page loads
+- **⚡ Fast Loading** - Optimised for quick page loads
 - **🎯 Intuitive Navigation** - Clear menu structure
 - **✅ Form Validation** - Client-side and server-side validation
 - **🔔 User Feedback** - Success/error messages for actions

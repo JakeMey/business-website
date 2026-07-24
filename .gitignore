@@ -36,9 +36,9 @@ error_log
 *.sqlite
 
 # ✅ Allow specific SQL files
-!schema.sql
+!business_db.sql
 !*.sample.sql
-!*.schema.sql
+!*.business_db.sql
 
 # 🔐 Backup files
 *.bak
